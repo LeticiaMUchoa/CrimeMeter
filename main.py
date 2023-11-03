@@ -4,12 +4,12 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sqlite3
 
-# Função para criar o banco de dados de crimes e inserir dados
+
 def criar_banco_de_dados():
     conn = sqlite3.connect("crime_data.db")
     cursor = conn.cursor()
 
-    # Cria uma tabela para armazenar os dados
+   
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS crimes (
             Bairro TEXT,
@@ -19,7 +19,7 @@ def criar_banco_de_dados():
     """)
 
 
-    # Insere os dados
+  
     data = [
         ("Cais do Porto", "Janeiro", 2),
         ("Cais do Porto", "Fevereiro", 6),
@@ -1423,17 +1423,16 @@ def criar_banco_de_dados():
 
     cursor.executemany("INSERT INTO crimes VALUES (?, ?, ?)", data)
 
-    # Commit para salvar as alterações no banco de dados
+   
     conn.commit()
     conn.close()
 
 
-# Função para criar o banco de dados do CVLI e a tabela
 def criar_banco_cvli():
     conn = sqlite3.connect("cvli_data.db")
     cursor = conn.cursor()
 
-    # Cria uma tabela para armazenar os dados
+   
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS cvli (
             Bairro TEXT,
@@ -1442,7 +1441,7 @@ def criar_banco_cvli():
         )
     """)
 
-    # Insira os dados do CVLI com base nas informações que você forneceu
+    
     data_cvli = [
         ("Cais do Porto", "Janeiro", 2),
         ("Cais do Porto", "Fevereiro", 6),
@@ -2854,31 +2853,29 @@ def criar_banco_cvli():
 
     cursor.executemany("INSERT INTO cvli VALUES (?, ?, ?)", data_cvli)
 
-    # Commit para salvar as alterações no banco de dados
+    
     conn.commit()
     conn.close()
 
-# Função para ler o banco de dados de crimes
+
 def ler_banco_de_dados():
     conn = sqlite3.connect("crime_data.db")
     cursor = conn.cursor()
     data = cursor.execute("SELECT Bairro, Mes, SUM(Quantidade) FROM crimes GROUP BY Bairro, Mes").fetchall()
     conn.close()
     return data
-
-# Função para ler o banco de dados do CVLI
+
 def ler_banco_cvli():
     conn = sqlite3.connect("cvli_data.db")
     cursor = conn.cursor()
     data = cursor.execute("SELECT Bairro, Mes, SUM(Quantidade) FROM cvli GROUP BY Bairro, Mes").fetchall()
     conn.close()
     return data
-
-# Função para ordenar os dados de acordo com a ordem correta dos meses
+
 def ordenar_dados_por_meses(dados):
     return sorted(dados, key=lambda x: meses_dict[x[1]])
 
-# Função para atualizar o gráfico de pizza de crimes
+
 def atualizar_grafico():
     bairro = combo_bairro.get()
 
@@ -2895,7 +2892,7 @@ def atualizar_grafico():
     ax.set_title(f'Distribuição de Crimes em {bairro}')
     canvas.draw()
 
-# Dicionário para mapear bairros para classificações
+
 meses_dict = {
     "Janeiro": 1,
     "Fevereiro": 2,
@@ -2911,7 +2908,7 @@ meses_dict = {
     "Dezembro": 12
 }
 
-# Dicionário para mapear bairros para AIS
+
 ais_dict = {
     "Cais do Porto": "AIS 1",
     "Vicente Pinzón": "AIS 1",
@@ -3032,22 +3029,21 @@ ais_dict = {
     
 }
 
-
-# Função para atualizar o gráfico de CVLI
+
 def atualizar_grafico_cvli():
     bairro = combo_bairro_cvli.get()
-    ais = ais_dict.get(bairro, "Não Classificado")  # Obtenha a classificação AIS
+    ais = ais_dict.get(bairro, "Não Classificado") 
 
     data = ler_banco_cvli()
     quantidades = [0] * 12
 
-    total_cvli = 0  # Redefinir o total de CVLI para o bairro selecionado
+    total_cvli = 0 
 
     for row in data:
         if row[0] == bairro:
             mes_numero = meses_dict.get(row[1])
             quantidades[mes_numero - 1] = row[2]
-            # Atualizar o total de CVLI para o bairro selecionado
+            
             total_cvli += row[2]
 
     ax_cvli.clear()
@@ -3061,24 +3057,23 @@ def atualizar_grafico_cvli():
 
     canvas_cvli.draw()
 
-# Inicialização do tkinter
+
 root = tk.Tk()
 root.title("Análise de Crimes por Bairro e CVLI")
 
 
 
-# Criar o banco de dados e inserir os dados
+
 criar_banco_de_dados()
 criar_banco_cvli()
 
-# Criação de widgets para o gráfico de pizza
 frame_pizza = ttk.Frame(root)
 frame_pizza.grid(row=0, column=0, padx=10, pady=10)
 
 label_bairro = tk.Label(frame_pizza, text="Selecione o Bairro:")
 label_bairro.pack()
 
-# Ordena a lista de bairros alfabeticamente
+
 bairros = sorted(list(set(row[0] for row in ler_banco_de_dados())))
 combo_bairro = ttk.Combobox(frame_pizza, values=bairros)
 combo_bairro.pack()
@@ -3086,14 +3081,13 @@ combo_bairro.pack()
 atualizar_btn = tk.Button(frame_pizza, text="Atualizar Gráfico", command=atualizar_grafico)
 atualizar_btn.pack()
 
-# Criação de widgets para o gráfico de CVLI
 frame_cvli = ttk.Frame(root)
 frame_cvli.grid(row=0, column=1, padx=10, pady=10)
 
 label_bairro_cvli = tk.Label(frame_cvli, text="Selecione o Bairro:")
 label_bairro_cvli.pack()
 
-# Ordena a lista de bairros alfabeticamente
+
 bairros_cvli = sorted(list(set(row[0] for row in ler_banco_cvli())))
 combo_bairro_cvli = ttk.Combobox(frame_cvli, values=bairros_cvli)
 combo_bairro_cvli.pack()
@@ -3101,13 +3095,11 @@ combo_bairro_cvli.pack()
 atualizar_btn_cvli = tk.Button(frame_cvli, text="Atualizar Gráfico CVLI", command=atualizar_grafico_cvli)
 atualizar_btn_cvli.pack()
 
-# Criação do gráfico de pizza com matplotlib
 fig = Figure(figsize=(6, 4), dpi=100)
 ax = fig.add_subplot(111)
 canvas = FigureCanvasTkAgg(fig, master=frame_pizza)
 canvas.get_tk_widget().pack()
-
-# Criação do gráfico de CVLI com matplotlib (tamanho ajustado)
+
 fig_cvli = Figure(figsize=(12, 4), dpi=100)
 ax_cvli = fig_cvli.add_subplot(111)
 canvas_cvli = FigureCanvasTkAgg(fig_cvli, master=frame_cvli)
