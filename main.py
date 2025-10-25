@@ -1,3 +1,6 @@
+#Feito em 2023 com pouco conhecimento de SQL e Python.
+#Ainda não tinha pleno conhecimento das linguagens e fiz com base no que eu havia aprendido e com breves pesquisas relacionadas ao conteúdo e sobre a construção de variáveis.
+
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.figure import Figure
@@ -2864,14 +2867,16 @@ def ler_banco_de_dados():
     data = cursor.execute("SELECT Bairro, Mes, SUM(Quantidade) FROM crimes GROUP BY Bairro, Mes").fetchall()
     conn.close()
     return data
-
+
+
 def ler_banco_cvli():
     conn = sqlite3.connect("cvli_data.db")
     cursor = conn.cursor()
     data = cursor.execute("SELECT Bairro, Mes, SUM(Quantidade) FROM cvli GROUP BY Bairro, Mes").fetchall()
     conn.close()
     return data
-
+
+
 def ordenar_dados_por_meses(dados):
     return sorted(dados, key=lambda x: meses_dict[x[1]])
 
@@ -3029,7 +3034,8 @@ ais_dict = {
     
 }
 
-
+
+
 def atualizar_grafico_cvli():
     bairro = combo_bairro_cvli.get()
     ais = ais_dict.get(bairro, "Não Classificado") 
@@ -3099,10 +3105,12 @@ fig = Figure(figsize=(6, 4), dpi=100)
 ax = fig.add_subplot(111)
 canvas = FigureCanvasTkAgg(fig, master=frame_pizza)
 canvas.get_tk_widget().pack()
-
+
+
 fig_cvli = Figure(figsize=(12, 4), dpi=100)
 ax_cvli = fig_cvli.add_subplot(111)
 canvas_cvli = FigureCanvasTkAgg(fig_cvli, master=frame_cvli)
 canvas_cvli.get_tk_widget().pack()
 
 root.mainloop()
+
